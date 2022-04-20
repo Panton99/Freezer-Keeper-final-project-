@@ -11,19 +11,17 @@ public class UserItem{
 * */
     private String name;
     private String food;
-    private int foodId;
     private int storageType;
     private int foodType;
     private String purchaseDate;
     private Date mDate;
-
-    public UserItem(String name, String food, int storageType, int foodType, String purchaseDate{
+    public UserItem(String name, String food, int storageType, int foodType) {
         super();
         this.name = name;
         this.food = food;
         this.storageType = storageType;
         this.foodType = foodType;
-        this.purchaseDate = purchaseDate;
+//        this.purchaseDate = purchaseDate;
     }
     public String getName() {
         return name;
@@ -37,12 +35,6 @@ public class UserItem{
     public  void setFood(String food){
         this.food = food;
     }
-    public int getFoodId() {
-        return foodId;
-    }
-    public void setFoodId(int foodId){
-        this.foodId = foodId;
-    }
     public int getStorageType(){
         return storageType;
     }
@@ -53,7 +45,7 @@ public class UserItem{
         return foodType;
     }
     public void setFoodType(int foodType){
-        this.foodId = foodId;
+        this.foodType = foodType;
     }
     public String getPurchaseDate(){
         return purchaseDate;

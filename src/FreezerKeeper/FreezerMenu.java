@@ -1,5 +1,6 @@
 package FreezerKeeper;
 
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class FreezerMenu {
@@ -20,16 +21,16 @@ public class FreezerMenu {
 
             switch(num) {
                 case 1 :
-                    fo.itemInsert(itemAdd());
+                    fo.insertItem(itemAdd());
                     break;
-                case 2 :
-                    fo.itemDelete(foodId());
-                    break;
-                case 3 :
-                    fo.itemSearchId(foodId());
-                    break;
-                case 4 :
-                    fo.itemSelectAll();
+//                case 2 :
+//                    fo.deleteItem(foodId());
+//                    break;
+//                case 3 :
+//                    fo.searchFoodId(foodId());
+//                    break;
+//                case 4 :
+//                    fo.itemSelectAll();
                 case 5 :
                     System.out.println("Program Ended. See you next time.");
                     return;
@@ -54,14 +55,10 @@ public class FreezerMenu {
         System.out.println("[1]Refrigerator, [2]Freezer");
         System.out.println("Enter storage type (Enter 1-2) : ");
         int storageType = scan.nextInt();
-        System.out.println("Date of your purchase(YYYY/MM/DD) : ");
-        String purchaseDate = scan.nextLine();
+//        System.out.println("Date of your purchase(YYYY/MM/DD) : ");
+//        String purchaseDate = scan.nextLine();
         scan.nextLine();
-        UserItem userItem = new UserItem(name, food, storageType, foodType, purchaseDate);
+        UserItem userItem = new UserItem(name, food, storageType, foodType);
         return userItem;
-    }
-    public int foodId(){
-        System.out.println("Enter the Food Id number");
-        return Integer.parseInt(scan.nextLine());
     }
 }
