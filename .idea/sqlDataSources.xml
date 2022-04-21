@@ -4,5 +4,11 @@
     <mapping uuid="0086fbd5-76e5-46c2-a3f6-f9b8d99b16b0" name="@localhost Mapping">
       <data-sources db="fb70e489-829d-4d14-9837-b03ccf7ca1d6" />
     </mapping>
+    <mapping uuid="996a935b-4e8b-41ec-bc77-ec99ea6e2bec" name="@localhost Mapping [2]">
+      <data-sources db="e4d62ef1-b142-4d55-8e3c-652ca75a1dd4" />
+      <scope>
+        <node kind="schema" qname="freezerDB_schema" />
+      </scope>
+    </mapping>
   </component>
 </project>
