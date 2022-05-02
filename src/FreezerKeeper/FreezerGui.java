@@ -3,16 +3,14 @@ package FreezerKeeper;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-public class FreezerGui  {
+public class FreezerGui extends JFrame {
     JFrame jframe = new JFrame();
     JPanel jpanel = new JPanel();
     //One line input component
-    JTextField t1 = new JTextField(); //for name input.
-    JTextField t2 = new JTextField(); //for food item input.
+    JTextField tName = new JTextField(); //for name input.
+    JTextField tFood = new JTextField(); //for food item input.
     //multiple line input component
     JTextArea ta = new JTextArea();
     JButton create, add, delete, view, search, alert;
@@ -44,12 +42,12 @@ public class FreezerGui  {
             jsp.setBounds(60, 160, 850, 540);
             jpanel.add(jsp);
             //set the labels in the interface.
-            t1.setBounds(110, 25, 120, 25);//name input component
-            jpanel.add(t1);
+            tName.setBounds(110, 25, 120, 25);//name input component
+            jpanel.add(tName);
             nameLabel.setBounds(30, 21, 100, 30);
             jpanel.add(nameLabel);
-            t2.setBounds(330, 25, 120, 25);//food item input component
-            jpanel.add(t2);
+            tFood.setBounds(330, 25, 120, 25);//food item input component
+            jpanel.add(tFood);
             foodLabel.setBounds(250, 21, 100, 30);
             jpanel.add(foodLabel);
             jComboBoxFoodType.setBounds(530, 25, 200, 25);
@@ -94,28 +92,23 @@ public class FreezerGui  {
                 });
 
             //Making new user's table in the Database.
-            create.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
+            create.addActionListener((event) -> {
                     ta.setText("");
                     dao.createTable();
                     ta.append("Freezer DB table has been made. \n");
-                    t1.setText("");
-                    t2.setText("");
+                    tName.setText("");
+                    tFood.setText("");
                     jComboBoxFoodType.setAction(null);
                     jComboBoxStorageType.setAction(null);
-                }
             });
 
             //Adding food item in user's list.
-            add.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
+            add.addActionListener((event) -> {
                     ta.setText("");
-                    String name = t1.getText();
-                    String foodName = t2.getText();
+                    String name = tName.getText();
+                    String foodName = tFood.getText();
                     // To find whether there is a wrong parameter in user's name or food item.
-                    if (name.matches("[^a-zA-Z]*$+") || foodName.isEmpty() ) {
+                    if (!name.matches("^[a-zA-Z]+$") || foodName.isEmpty() ) {
                         ta.append("Error: Wrong parameters.");
                     }
                     else{
@@ -123,33 +116,27 @@ public class FreezerGui  {
                     String storageType = jComboBoxStorageType.getItemAt(jComboBoxStorageType.getSelectedIndex());
                     dao.insertItem(new UserItem(name, foodName, foodType, storageType));
                     ta.append("Item is successfully updated.\n");
-                    t1.setText("");
-                    t2.setText("");
+                    tName.setText("");
+                    tFood.setText("");
                     jComboBoxFoodType.setAction(null);
                     jComboBoxStorageType.setAction(null);
                     }
-                }
             });
 
             //Deleting the item in user's list.
-            delete.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
+            delete.addActionListener((event) -> {
                     ta.setText("");
-                    String foodName = t2.getText();
+                    String foodName = tFood.getText();
                     dao.deleteItem(foodName);
                     ta.append("The item is deleted from the list.\n");
-                    t1.setText("");
-                    t2.setText("");
+                    tName.setText("");
+                    tFood.setText("");
                     jComboBoxFoodType.setAction(null);
                     jComboBoxStorageType.setAction(null);
-                }
             });
 
             //Showing whole food list.
-            view.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
+            view.addActionListener((event) -> {
                     ta.setText("");
                     dao.getExpDate();
                     if(dao.getExpDate().isEmpty()) {
@@ -159,19 +146,16 @@ public class FreezerGui  {
                         ta.append("This is your whole list of food item.\n");
                     }
                     ta.append(dao.getExpDate().toString().replace("[", "").replace("]", "").replace(",",""));
-                    t1.setText("");
-                    t2.setText("");
+                    tName.setText("");
+                    tFood.setText("");
                     jComboBoxFoodType.setAction(null);
                     jComboBoxStorageType.setAction(null);
-                }
             });
 
             //Showing search result.
-            search.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
+            search.addActionListener((event) ->{
                     ta.setText("");
-                    String foodName = t2.getText();
+                    String foodName = tFood.getText();
                     dao.searchFood(foodName);
                     if(dao.searchFood(foodName).isEmpty()) {
                         ta.append("There is no such food item in the list.");
@@ -180,30 +164,27 @@ public class FreezerGui  {
                         ta.append("This is your search result.\n");
                     ta.append(dao.searchFood(foodName).toString().replace("[", "").replace("]", "").replace(",",""));
                     }
-                    t1.setText("");
-                    t2.setText("");
+                    tName.setText("");
+                    tFood.setText("");
                     jComboBoxFoodType.setAction(null);
                     jComboBoxStorageType.setAction(null);
-                }
             });
             //Showing upcoming expiration food list.
-            alert.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
+            alert.addActionListener((event) -> {
                     ta.setText("");
-                    dao.getOneDayAlert();
-                    if(dao.getOneDayAlert().isEmpty()) {
+                    dao.getExpAlert();
+                    if(dao.getExpAlert().isEmpty()) {
                         ta.append("There is no upcoming expiration dates in the list.");
                     }
                     else {
-                        ta.append("This is your upcoming expiration date. You should use within 3 days.\n");
-                        ta.append(dao.getOneDayAlert().toString().replace("[", "").replace("]", "").replace(",",""));
+                        ta.append("This is your upcoming expiration/expired date. You should use within 3 days.\n");
+                        ta.append(dao.getExpAlert().toString().replace("[", "").replace("]", "").replace(",",""));
+
                     }
-                    t1.setText("");
-                    t2.setText("");
+                    tName.setText("");
+                    tFood.setText("");
                     jComboBoxFoodType.setAction(null);
                     jComboBoxStorageType.setAction(null);
-                }
             });
         }
         catch (Exception e) {

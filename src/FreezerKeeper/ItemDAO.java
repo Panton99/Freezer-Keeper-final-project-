@@ -1,5 +1,6 @@
 //Jisoo Kim 2022/04/21
 package FreezerKeeper;
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import oracle.jdbc.proxy.annotation.Pre;
 
 import java.io.*;
@@ -11,8 +12,8 @@ public class ItemDAO implements FreezerKeeper {
     Connection con;
     Statement state;
     ResultSet rs;
-    private String sqlDB_DRIVER_CLASS = "com.mysql.jdbc.Driver";
-    private String sqlDB_URL = "jdbc:mysql://localhost:3306/freezerDB_schema?useSSL=false";
+    private String sqlDB_DRIVER_CLASS = "com.mysql.jdbc.Driver"; //loading MySQL driver
+    private String sqlDB_URL = "jdbc:mysql://localhost:3306/freezerDB_schema?useSSL=false"; //Connection with DB
     private String sqlDB_USERNAME = "root";
     private String sqlDB_PW = "root1234";
 
@@ -20,8 +21,8 @@ public class ItemDAO implements FreezerKeeper {
     public ItemDAO() {
         try {
             Class.forName(sqlDB_DRIVER_CLASS);
-            con = DriverManager.getConnection(sqlDB_URL, sqlDB_USERNAME, sqlDB_PW);
-            state = con.createStatement(rs.TYPE_SCROLL_INSENSITIVE, rs.CONCUR_UPDATABLE);
+            con = DriverManager.getConnection(sqlDB_URL, sqlDB_USERNAME, sqlDB_PW); //Connection with DB
+            state = con.createStatement(rs.TYPE_SCROLL_INSENSITIVE, rs.CONCUR_UPDATABLE); //Allow issuing SQL queries to DB
         } catch (ClassNotFoundException e) {
             System.err.println("\nDriver loading failed..");
         } catch (SQLException e) {
@@ -48,35 +49,33 @@ public class ItemDAO implements FreezerKeeper {
      *             ignore 1 rows
      *                     (foodType, storageType, Days)
      */
-
     //Create the table for Cold storage chart(reference table)
     public void createColdStorageChartTable() {
         try {
             state = con.createStatement();
-            state.executeUpdate("CREATE TABLE if not exists Cold_Storage_Chart (foodType varchar(45) NOT NULL, storageType varchar(45) NOT NULL, Days int NOT NULL,\n" +
-                    " PRIMARY KEY (foodType, storageType, Days))");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Eggs','Refrigerator',35)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Eggs ','Freezer',360)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('etc','Freezer',21)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('etc','Refrigerator',1)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Fin fish','Freezer',90)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Fin fish','Refrigerator',3)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Fresh beef, veal, lamb, pork','Freezer',360)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Fresh beef, veal, lamb, pork','Refrigerator',5)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Hamburger, ham, ground meats','Freezer',120)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Hamburger, ham, ground meats','Refrigerator',2)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Hot dogs','Freezer',60)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Hot dogs','Refrigerator',7)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Left overs','Freezer',60)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Left overs','Refrigerator',4)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Luncheon meat, Bacon and sausage','Freezer',30)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Luncheon meat, Bacon and sausage','Refrigerator',5)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Salad','Freezer',0)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Salad','Refrigerator',4)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Shell fish','Freezer',120);");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Shell fish','Refrigerator',3)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Soups and stews','Freezer',90)");
-            state.executeUpdate("INSERT INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Soups and stews','Refrigerator',4)");
+            state.executeUpdate("CREATE TABLE if not exists Cold_Storage_Chart (foodType varchar(45) NOT NULL, storageType varchar(45) NOT NULL, Days int NOT NULL)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Eggs','Refrigerator',35)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Eggs ','Freezer',360)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('etc','Freezer',21)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('etc','Refrigerator',1)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Fin fish','Freezer',90)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Fin fish','Refrigerator',3)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Fresh beef, veal, lamb, pork','Freezer',360)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Fresh beef, veal, lamb, pork','Refrigerator',5)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Hamburger, ham, ground meats','Freezer',120)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Hamburger, ham, ground meats','Refrigerator',2)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Hot dogs','Freezer',60)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Hot dogs','Refrigerator',7)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Left overs','Freezer',60)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Left overs','Refrigerator',4)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Luncheon meat, Bacon and sausage','Freezer',30)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Luncheon meat, Bacon and sausage','Refrigerator',5)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Salad','Freezer',0)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Salad','Refrigerator',4)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Shell fish','Freezer',120);");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Shell fish','Refrigerator',3)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Soups and stews','Freezer',90)");
+            state.executeUpdate("INSERT IGNORE INTO Cold_Storage_Chart (`foodType`,`storageType`,`Days`) VALUES ('Soups and stews','Refrigerator',4)");
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -117,7 +116,8 @@ public class ItemDAO implements FreezerKeeper {
     //Search the food item.
     public List<UserItem> searchFood(String foodName) {
         List<UserItem> itemList = new ArrayList<>();
-        String query4 = "SELECT name, freezerDB.foodName, freezerDB.foodType, freezerDB.storageType, freezerDB.mDate, Cold_Storage_Chart.Days, DATE_ADD( freezerDB.mDate, INTERVAL Cold_Storage_Chart.Days DAY) AS ExpDate " +
+        String query4 = "SELECT name, freezerDB.foodName, freezerDB.foodType, freezerDB.storageType, freezerDB.mDate, Cold_Storage_Chart.Days," +
+                " DATE_ADD( freezerDB.mDate, INTERVAL Cold_Storage_Chart.Days DAY) AS ExpDate " +
                 "FROM freezerDB INNER JOIN Cold_Storage_Chart "
                 + "ON  freezerDB.foodType = Cold_Storage_Chart.foodType AND freezerDB.storageType = Cold_Storage_Chart.StorageType " + "WHERE foodName= ?";
         PreparedStatement pstate;
@@ -135,10 +135,12 @@ public class ItemDAO implements FreezerKeeper {
         }
         return itemList;
     }
+
     //Showing the whole list of foods in the DB.
     public List<UserItem> getExpDate() {
         List<UserItem> itemList = new ArrayList<>();
-        String query5 = "SELECT name, freezerDB.foodName, freezerDB.foodType, freezerDB.storageType, freezerDB.mDate, Cold_Storage_Chart.Days, DATE_ADD( freezerDB.mDate, INTERVAL Cold_Storage_Chart.Days DAY) AS ExpDate " +
+        String query5 = "SELECT name, freezerDB.foodName, freezerDB.foodType, freezerDB.storageType, freezerDB.mDate, Cold_Storage_Chart.Days," +
+                " DATE_ADD( freezerDB.mDate, INTERVAL Cold_Storage_Chart.Days DAY) AS ExpDate " +
                 "FROM freezerDB INNER JOIN Cold_Storage_Chart "
                 + "ON freezerDB.foodType = Cold_Storage_Chart.foodType AND freezerDB.storageType = Cold_Storage_Chart.StorageType ";
         PreparedStatement pstate;
@@ -163,8 +165,9 @@ public class ItemDAO implements FreezerKeeper {
         }
         return itemList;
     }
+
     // Alert the upcoming expiration date within 3 days.
-    public List<UserItem> getOneDayAlert() {
+    public List<UserItem> getExpAlert() {
         List<UserItem> itemList = new ArrayList<>();
         String query5 = "SELECT name, freezerDB.foodName, freezerDB.foodType, freezerDB.storageType, freezerDB.mDate, Cold_Storage_Chart.Days, DATE_ADD( freezerDB.mDate, INTERVAL Cold_Storage_Chart.Days DAY) AS ExpDate " +
                 "FROM freezerDB INNER JOIN Cold_Storage_Chart "
@@ -184,6 +187,7 @@ public class ItemDAO implements FreezerKeeper {
         }
         return itemList;
     }
+    //Close the result sets.
     public void closeConnection() throws Exception {
         con.close();
         state.close();
