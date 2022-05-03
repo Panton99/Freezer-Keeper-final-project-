@@ -1,14 +1,10 @@
-//Jisoo Kim 2022/04/21
+//Jisoo Kim 2022/04/23
 package FreezerKeeper;
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
-import oracle.jdbc.proxy.annotation.Pre;
-
-import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 public class ItemDAO implements FreezerKeeper {
-    //Data Access Object (DB connection, insert, delete).
+    //Data Access Object (DB connection, insert, delete, search, view, expAlert).
     Connection con;
     Statement state;
     ResultSet rs;
@@ -20,7 +16,7 @@ public class ItemDAO implements FreezerKeeper {
     //Connecting the DB.
     public ItemDAO() {
         try {
-            Class.forName(sqlDB_DRIVER_CLASS);
+            Class.forName(sqlDB_DRIVER_CLASS); //Load the driver
             con = DriverManager.getConnection(sqlDB_URL, sqlDB_USERNAME, sqlDB_PW); //Connection with DB
             state = con.createStatement(rs.TYPE_SCROLL_INSENSITIVE, rs.CONCUR_UPDATABLE); //Allow issuing SQL queries to DB
         } catch (ClassNotFoundException e) {
@@ -85,7 +81,7 @@ public class ItemDAO implements FreezerKeeper {
     public int insertItem(UserItem userItem) {
         String query = "INSERT INTO freezerDB (name, foodName, foodType, storageType)"
                 + "VALUES(?, ?, ?, ?)";
-        PreparedStatement pstate;
+        PreparedStatement pstate; //for inserting new candidate
         int result = 0;
         try {
             pstate = con.prepareStatement(query);
