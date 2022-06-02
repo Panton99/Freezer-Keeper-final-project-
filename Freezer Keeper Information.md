@@ -13,7 +13,7 @@ What is the program about?
 -	By the user input, the program tells the storage date and estimated expiration date to the user (Storage date is referenced from the Food Safety Government).
 -	User can easily add/delete/search their foods.
 -	The list has the user's name so that foods are differentiated by the users.
--	This program shows upcoming expiration date lists to the user.
+-	This program shows upcoming expiration date of each food item (within 3 days).
 
 What to expect from this program?
 -	Due to the alert of upcoming expiration date, consumer can smartly schedule the grocery shopping and spends less on their grocery.
