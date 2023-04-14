@@ -4,7 +4,7 @@ Freezer Keeper Project
 
 
 Program name: Freezer keeper Used MySQL database with local host URL.
-Description:<br/>
+Description:<br />
 The program, called Freezer Keeper, uses a MySQL database with a local host URL. Its purpose is to address the challenge of keeping track of storage dates for home-refrigerated foods, which have short time limits and are difficult to manage. The program helps users store food for appropriate dates, thereby keeping it fresh for longer periods.
 
 1. Purpose<br />
